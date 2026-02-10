@@ -13,3 +13,4 @@ public class AccountClosingDto
     public int Id { get; set; }
     public DateOnly ClosedAt { get; set; }
 }
+
