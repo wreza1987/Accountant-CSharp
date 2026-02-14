@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Accountant.Context;
 using Accountant.Domain.Entities;
+using Accountant.Dtos;
 
 
 namespace Accountant.Controllers
@@ -22,17 +23,21 @@ namespace Accountant.Controllers
 
         [HttpGet]
         [Route("add-profile")]
-        public async Task<IActionResult> SaveAsync([FromBody] Profile dto)
+        public async Task<IActionResult> SaveAsync([FromBody] ProfileDto dto)
         {
-            var profile = await _db.Profiles.FirstOrDefaultAsync(x => x.Id == dto.Id);
-            if (profile == null) return NotFound();
-            
-            await _profiles.AddAsync(profile);
+            var newProfile = new Profile
+            {
+                ProfileType = dto.ProfileType,
+                Name = dto.Name,
+                ProvinceId = dto.ProvinceId
+            };
+
+            await _profiles.AddAsync(newProfile);
             await _db.SaveChangesAsync();
             _logger.LogInformation($"----- {dto.Name} Added -----");
             
             return Created(
-                null as Uri, profile);
+                null as Uri, newProfile);
         }
     }
 }

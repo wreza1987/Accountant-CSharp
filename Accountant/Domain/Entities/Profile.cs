@@ -9,7 +9,7 @@ public class Profile
     public string Name { get; set; } = null!;
     public int ProvinceId { get; set; }
     
-    public virtual required Province Province { get; set; } = null!;
+    // public virtual required Province Province { get; set; } = null!;
     public ICollection<ProfileAccount> ProfileAccounts { get; set; }
         = new List<ProfileAccount>();
 }

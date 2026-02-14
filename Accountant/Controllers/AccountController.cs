@@ -24,12 +24,12 @@ namespace Accountant.Controllers
 
         [HttpPost]
         [Route("/Account/Opening")]
-        public async Task<ActionResult<Account>> Create([FromBody] AccountOpeningDto? dto)
+        public async Task<ActionResult<Account>> Create([FromBody] AccountOpeningDto dto)
         {
-            if (dto == null)
-            {
-                return BadRequest("داده ورودی نامعتبر است.");
-            }
+            // if (dto == null)
+            // {
+            //     return BadRequest("داده ورودی نامعتبر است.");
+            // }
 
             var newAccount = new Account();
             newAccount.ActiveMode = ActiveMode.Active;
