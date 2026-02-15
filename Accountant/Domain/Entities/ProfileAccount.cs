@@ -7,8 +7,8 @@ public class ProfileAccount
     public int AccountId { get; set; }
     public double ShareOwned { get; set; }
     
-    public Profile Profile { get; set; } = null!;
-    public Account Account { get; set; } = null!;
+    // public Profile Profile { get; set; } = null!;
+    // public Account Account { get; set; } = null!;
 
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }

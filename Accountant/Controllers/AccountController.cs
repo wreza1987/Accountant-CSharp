@@ -26,11 +26,6 @@ namespace Accountant.Controllers
         [Route("/Account/Opening")]
         public async Task<ActionResult<Account>> Create([FromBody] AccountOpeningDto dto)
         {
-            // if (dto == null)
-            // {
-            //     return BadRequest("داده ورودی نامعتبر است.");
-            // }
-
             var newAccount = new Account();
             newAccount.ActiveMode = ActiveMode.Active;
             newAccount.SetAccountType(dto.AccountType);
@@ -43,7 +38,7 @@ namespace Accountant.Controllers
             return Created(null as Uri, newAccount);
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("/Account/Closing")]
         public async Task<IActionResult> UpdateAsync(AccountClosingDto dto)
         {
@@ -57,6 +52,22 @@ namespace Accountant.Controllers
             _accounts.Update(selectedAccount);
             await _db.SaveChangesAsync();
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("/Account/GetAll")]
+        public async Task<ActionResult<IEnumerable<Account>>> Get()
+        {
+            var account = await _accounts.Select(a=> new
+            {
+                a.Id,
+                a.AccountType,
+                a.OpenedAt,
+                a.ActiveMode,
+                a.ClosedAt,
+                Profiles = a.ProfileAccounts.Select(x=>x.ProfileId).ToArray()
+            }).ToListAsync();
+            return Ok(account);
         }
     }
 }
