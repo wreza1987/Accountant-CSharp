@@ -23,13 +23,16 @@ namespace Accountant.Controllers
 
         [HttpPost]
         [Route("/ProfileAccount/Creating")]
-        public async Task<ActionResult<ProfileAccount>> Create([FromBody] ProfileAccountDto profileAccount)
+        public async Task<ActionResult<ProfileAccount>> Create([FromBody] ProfileAccountDto dto)
         {
             var newProfileAccount = new ProfileAccount();
-            newProfileAccount.ProfileId = profileAccount.ProfileId;
-            newProfileAccount.AccountId = profileAccount.AccountId;
-            newProfileAccount.ShareOwned = profileAccount.ShareOwned;
-
+            
+            newProfileAccount.ProfileId = dto.ProfileId;
+            newProfileAccount.AccountId = dto.AccountId;
+            newProfileAccount.ShareOwned = dto.ShareOwned;
+            newProfileAccount.Profile.Id = dto.ProfileId;
+            newProfileAccount.Account.Id = dto.AccountId;
+            
             await _profileAccounts.AddAsync(newProfileAccount);
             await _db.SaveChangesAsync();
             _logger.LogInformation("Profile Account Created!");
@@ -50,6 +53,18 @@ namespace Accountant.Controllers
             return Ok();
         }
 
-
+        [HttpGet]
+        [Route("/ProfileAccount/GetAll")]
+        public async Task<ActionResult<IEnumerable<ProfileAccount>>> Get()
+        {
+            var profileAccount = await _profileAccounts.Select(pa => new
+            {
+                pa.Id,
+                pa.ProfileId,
+                pa.AccountId,
+                pa.ShareOwned,
+            }).ToListAsync();
+            return Ok(profileAccount);
+        }
     }
 }

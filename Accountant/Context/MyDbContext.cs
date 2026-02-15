@@ -36,10 +36,10 @@ public class MyDbContext: DbContext
             e.Property(p => p.ProfileType).IsRequired();
             e.Property(p => p.Name)       .HasMaxLength(50).IsRequired().IsUnicode();
 
-            // e.HasOne(p => p.Province)
-            //  .WithMany(prov => prov.Profiles)
-            //  .HasForeignKey(p => p.ProvinceId)
-            //  .OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(p => p.Province)
+             .WithMany(prov => prov.Profiles)
+             .HasForeignKey(p => p.ProvinceId)
+             .OnDelete(DeleteBehavior.Restrict);
         });
 
         // ────────────────────────────────────────────────
@@ -65,14 +65,14 @@ public class MyDbContext: DbContext
             e.Property(pa => pa.AccountId)   .IsRequired();
             e.Property(pa => pa.ShareOwned)  .IsRequired();
 
-            // e.HasOne(pa => pa.Profile)
-            //  .WithMany(p => p.ProfileAccounts)
-            //  .HasForeignKey(pa => pa.ProfileId)
-            //  .OnDelete(DeleteBehavior.Cascade);
-            // e.HasOne(pa => pa.Account)
-            //  .WithMany(a => a.ProfileAccounts)
-            //  .HasForeignKey(pa => pa.AccountId)
-            //  .OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(pa => pa.Profile)
+             .WithMany(p => p.ProfileAccounts)
+             .HasForeignKey(pa => pa.ProfileId)
+             .OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(pa => pa.Account)
+             .WithMany(a => a.ProfileAccounts)
+             .HasForeignKey(pa => pa.AccountId)
+             .OnDelete(DeleteBehavior.Cascade);
         });
 
         // ────────────────────────────────────────────────

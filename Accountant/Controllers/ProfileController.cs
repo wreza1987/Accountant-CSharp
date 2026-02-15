@@ -31,6 +31,10 @@ namespace Accountant.Controllers
                 ProfileType = dto.ProfileType,
                 Name = dto.Name,
                 ProvinceId = dto.ProvinceId,
+                Province =  new Province
+                {
+                    Id = dto.ProvinceId,
+                }
             };
 
             await _profiles.AddAsync(newProfile);

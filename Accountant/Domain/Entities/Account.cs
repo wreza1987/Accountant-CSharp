@@ -4,7 +4,7 @@ namespace Accountant.Domain.Entities;
 
 public class Account
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public AccountType AccountType { get; set; } // Current,Savings,TimeDeposit,Credit
     public DateOnly OpenedAt { get; set; } = DateOnly.FromDateTime(DateTime.Now);
     public ActiveMode ActiveMode { get; set; } // Active,Inactive
