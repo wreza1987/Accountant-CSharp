@@ -50,7 +50,8 @@ namespace Accountant.Controllers
         public async Task<IActionResult> UpdateAsync([FromBody] ChangeProfileDto dto)
         {
             var selectedProfile = await _profiles.FirstOrDefaultAsync(x => x.Id == dto.Id);
-            if (selectedProfile != null)
+
+            if (selectedProfile == null)
                 return NotFound();
             selectedProfile.Name = dto.Name;
             selectedProfile.ProvinceId = dto.ProvinceId;

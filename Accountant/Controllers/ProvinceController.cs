@@ -52,7 +52,7 @@ namespace Accountant.Controllers
                 p.Id,
                 p.Name,
                 p.Capital,
-                Profiles = p.Profiles.Select(pf=>pf.ProvinceId).ToArray()
+                Profiles = p.Profiles.Select(pf=>$"{pf.Id} - {pf.Name}").ToArray()
             }).ToListAsync();
             return Ok(province);
         }

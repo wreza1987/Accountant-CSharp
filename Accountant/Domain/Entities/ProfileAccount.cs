@@ -16,17 +16,9 @@ public class ProfileAccount
 
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
-    public void AddOwner(int profileId, double sharePercentage, MyDbContext _db)
+    public void ValidateSharePercentage(decimal proposedShare)
     {
-        var _profiles = _db.Profiles;
-        var selectedProfile = _profiles.FirstOrDefaultAsync(p => p.Id == profileId);
-        if (selectedProfile != null) throw new Exception("چنین کاربری وجود ندارد");
-
-        if (sharePercentage <= 0 || sharePercentage > 1)
-            throw new ArgumentOutOfRangeException(nameof(sharePercentage));
-
-
+        if (proposedShare <= 0 || proposedShare > 1)
+            throw new ArgumentOutOfRangeException(nameof(proposedShare));
     }
-
-
 }
