@@ -22,13 +22,15 @@ namespace Accountant.Shared
             return text;
         }
 
-        //public static AccountType CheckAccountType(this AccountType accountType)
-        //{
-        //    if (!Enum.IsDefined(typeof(AccountType), accountType))
-        //    {
-        //        throw new Exception("نوع اکانت نامعتبر است.");
-        //    }
-        //    return accountType;
-        //}
+        
+        public static double ValidateShare(double shareOwned, double currentSumShare)
+        {
+            if (shareOwned < 0 || shareOwned > 1)
+                throw new ArgumentOutOfRangeException(nameof(shareOwned));
+            if (currentSumShare + shareOwned > 1)
+                throw new InvalidOperationException("مجموع سهم‌ها بیش از ۱ می‌شود");
+
+            return shareOwned;
+        }
     }
 }

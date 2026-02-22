@@ -3,6 +3,7 @@ using Accountant.Domain.Entities;
 using Accountant.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Accountant.Shared;
 
 namespace Accountant.Controllers
 {
@@ -25,18 +26,46 @@ namespace Accountant.Controllers
         [Route("/ProfileAccount/Creating")]
         public async Task<ActionResult<ProfileAccount>> Create([FromBody] ProfileAccountDto dto)
         {
+            var accountExists = await _db.Accounts.AnyAsync(a => a.Id == dto.AccountId);
+            var profileExists = await _db.Profiles.AnyAsync(p => p.Id == dto.ProfileId);
+
+            if (!accountExists)
+            {
+                return BadRequest($"حساب با شناسه {dto.AccountId} یافت نشد.");
+            }
+
+            if (!profileExists)
+            {
+                return BadRequest($"پروفایل با شناسه {dto.ProfileId} یافت نشد.");
+            }
+
+            //if (dto.ShareOwned <= 0 || dto.ShareOwned > 1)
+            //    throw new ArgumentOutOfRangeException(nameof(dto.ShareOwned));
+
             var currentSum = await _db.ProfileAccounts
                 .Where(pa => pa.AccountId == dto.AccountId)
                 .SumAsync(pa => pa.ShareOwned);
-            
-            if (currentSum + dto.ShareOwned > 1)
-                throw new InvalidOperationException("مجموع سهم‌ها بیش از ۱ می‌شود");
-            
+
+            //if (currentSum + dto.ShareOwned > 1)
+            //    throw new InvalidOperationException("مجموع سهم‌ها بیش از ۱ می‌شود");
+            //var shareOwned = ValidateCheckShare(dto.ShareOwned, currentSum);
+            try
+            {
+                ProfileAccount.ValidateShare(dto.ShareOwned, currentSum);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
             var newProfileAccount = new ProfileAccount();
             
             newProfileAccount.ProfileId = dto.ProfileId;
             newProfileAccount.AccountId = dto.AccountId;
-            
             newProfileAccount.ShareOwned = dto.ShareOwned;
             newProfileAccount.Profile.Id = dto.ProfileId;
             newProfileAccount.Account.Id = dto.AccountId;

@@ -16,9 +16,25 @@ public class ProfileAccount
 
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
-    public void ValidateSharePercentage(decimal proposedShare)
+    internal static void ValidateShare(double shareOwned, double currentSum)
     {
-        if (proposedShare <= 0 || proposedShare > 1)
-            throw new ArgumentOutOfRangeException(nameof(proposedShare));
+        throw new NotImplementedException();
     }
+
+    //public void ValidateSharePercentage(decimal proposedShare)
+    //{
+    //    if (proposedShare <= 0 || proposedShare > 1)
+    //        throw new ArgumentOutOfRangeException(nameof(proposedShare));
+    //    return;
+    //}
+
+    //public void CheckShareSum(MyDbContext _db, ProfileAccount profileAccount)
+    //{
+    //    var currentSum = _db.ProfileAccounts
+    //            .Where(pa => pa.AccountId == profileAccount.AccountId)
+    //            .SumAsync(pa => pa.ShareOwned);
+
+    //    if (currentSum + profileAccount.ShareOwned > 1)
+    //        throw new InvalidOperationException("مجموع سهم‌ها بیش از ۱ می‌شود");
+    //}
 }
