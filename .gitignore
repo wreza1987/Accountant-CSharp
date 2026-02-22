@@ -65,3 +65,4 @@ obj/
 *.exe
 .idea/*
 .idea
+.gitignore
