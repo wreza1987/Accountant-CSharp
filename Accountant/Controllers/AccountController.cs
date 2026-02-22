@@ -69,7 +69,9 @@ namespace Accountant.Controllers
             //    Profiles = a.ProfileAccounts.Select(x=>x.ProfileId).ToList()
             //}).ToListAsync();
 
-            var account = await _accounts.Select(a => new AccountDto()).ToListAsync();
+            var account = await _accounts
+                .Select(a => new AccountDto(a))
+                .ToListAsync();
 
             return Ok(account);
         }
