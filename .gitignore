@@ -63,3 +63,5 @@ obj/
 *.pdb
 *.dll
 *.exe
+.idea/*
+.idea
