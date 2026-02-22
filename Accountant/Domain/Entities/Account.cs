@@ -6,9 +6,10 @@ public class Account
 {
     public int Id { get; set; }
     public AccountType AccountType { get; set; } // Current,Savings,TimeDeposit,Credit
-    public DateOnly OpenedAt { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+    public DateOnly OpenedAt { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
     public ActiveMode ActiveMode { get; set; } // Active,Inactive
-    public DateOnly ClosedAt { get; set; } = DateOnly.FromDateTime(DateTime.MaxValue);
+    //public DateOnly ClosedAt { get; set; } = DateOnly.FromDateTime(DateTime.MaxValue);
+    public DateOnly? ClosedAt { get; set; } = null;
 
     public ICollection<ProfileAccount> ProfileAccounts { get; set; }
         = new List<ProfileAccount>();
@@ -31,33 +32,4 @@ public class Account
         }
         this.AccountType = accountType;
     }
-
-
-    /*
-    public void AddOwner(Profile profile, double sharePercentage)
-    {
-        if (sharePercentage <= 0 || sharePercentage > 1)
-            throw new ArgumentOutOfRangeException(nameof(sharePercentage));
-        
-        var currentTotalShare = AccountOwners.Sum(x => x.Share) + (double)sharePercentage;
-
-        if (currentTotalShare > 1)
-            throw new Exception("مجموع سهم‌ها نمی تواند بیشتر از 1 باشد");
-
-        AccountOwners.Add(new ProfileAccount
-        {
-            Profile = profile,
-            Share = sharePercentage
-        });
-    }
-    
-    public void ValidateShares()
-    {
-        var totalShare = AccountOwners.Sum(x => x.Share);
-
-        if (Math.Abs(totalShare - 1) > 0.001)
-            throw new Exception("مجموع سهم‌ها باید دقیقاً برابر 1 باشد");
-    }
-*/
-
 }

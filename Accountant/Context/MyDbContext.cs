@@ -51,7 +51,7 @@ public class MyDbContext: DbContext
             e.Property(a => a.AccountType).IsRequired();
             e.Property(a => a.OpenedAt)   .IsRequired();
             e.Property(a => a.ActiveMode) .IsRequired();
-            e.Property(a => a.ClosedAt)   .IsRequired();
+            //e.Property(a => a.ClosedAt)   .IsRequired();
         });
 
         // ────────────────────────────────────────────────
@@ -68,11 +68,12 @@ public class MyDbContext: DbContext
             e.HasOne(pa => pa.Profile)
              .WithMany(p => p.ProfileAccounts)
              .HasForeignKey(pa => pa.ProfileId)
-             .OnDelete(DeleteBehavior.Cascade);
+             .OnDelete(DeleteBehavior.Restrict);
+
             e.HasOne(pa => pa.Account)
              .WithMany(a => a.ProfileAccounts)
              .HasForeignKey(pa => pa.AccountId)
-             .OnDelete(DeleteBehavior.Cascade);
+             .OnDelete(DeleteBehavior.Restrict);
         });
 
         // ────────────────────────────────────────────────

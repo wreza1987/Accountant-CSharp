@@ -23,7 +23,7 @@ namespace Accountant.Shared
         }
 
         
-        public static double ValidateShare(double shareOwned, double currentSumShare)
+        public static decimal ValidateShare(decimal shareOwned, decimal currentSumShare)
         {
             if (shareOwned < 0 || shareOwned > 1)
                 throw new ArgumentOutOfRangeException(nameof(shareOwned));

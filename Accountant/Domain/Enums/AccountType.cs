@@ -1,8 +1,12 @@
-﻿namespace Accountant.Domain.Enums;
+﻿//using Microsoft.OpenApi.Attributes;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace Accountant.Domain.Enums;
 
 public enum AccountType
 {
-    Current     = 1,   // جاری
+    Current = 1,   // جاری
     Savings     = 2,   // پس‌انداز
     TimeDeposit = 3, // سپرده مدت‌دار
     Credit      = 4    // اعتباری / قرض‌الحسنه

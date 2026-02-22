@@ -18,6 +18,7 @@ namespace Accountant.Controllers
         public AccountController(ILogger<AccountController> logger, MyDbContext db)
         {
             _logger = logger;
+
             _db = db;
             _accounts = _db.Accounts;
         }
@@ -58,15 +59,18 @@ namespace Accountant.Controllers
         [Route("/Account/GetAll")]
         public async Task<ActionResult<IEnumerable<Account>>> Get()
         {
-            var account = await _accounts.Select(a=> new
-            {
-                a.Id,
-                a.AccountType,
-                a.OpenedAt,
-                a.ActiveMode,
-                a.ClosedAt,
-                Profiles = a.ProfileAccounts.Select(x=>x.ProfileId).ToArray()
-            }).ToListAsync();
+            //var account = await _accounts.Select(a=> new
+            //{
+            //    a.Id,
+            //    a.AccountType,
+            //    a.OpenedAt,
+            //    a.ActiveMode,
+            //    a.ClosedAt,
+            //    Profiles = a.ProfileAccounts.Select(x=>x.ProfileId).ToList()
+            //}).ToListAsync();
+
+            var account = await _accounts.Select(a => new AccountDto()).ToListAsync();
+
             return Ok(account);
         }
     }

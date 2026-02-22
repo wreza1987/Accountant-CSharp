@@ -51,7 +51,66 @@ namespace Accountant.Controllers
             //var shareOwned = ValidateCheckShare(dto.ShareOwned, currentSum);
             try
             {
-                ProfileAccount.ValidateShare(dto.ShareOwned, currentSum);
+                Helper.ValidateShare(dto.ShareOwned, currentSum);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            //catch(Exception ex)
+            //{
+            //    return BadRequest(ex.Message);
+            //}
+
+            var newProfileAccount = new ProfileAccount();
+            
+            newProfileAccount.ProfileId = dto.ProfileId;
+            newProfileAccount.AccountId = dto.AccountId;
+            newProfileAccount.ShareOwned = dto.ShareOwned;
+            //newProfileAccount.Profile.Id = dto.ProfileId;
+            //newProfileAccount.Account.Id = dto.AccountId;
+            
+            await _profileAccounts.AddAsync(newProfileAccount);
+            await _db.SaveChangesAsync();
+            _logger.LogInformation("Profile Account Created!");
+            return Created(null as Uri, newProfileAccount);
+        }
+
+        [HttpPut]
+        [Route("/ProfileAccount/Updating")]
+        public async Task<IActionResult> UpdateAsync(ProfileAccountDto dto)
+        {
+            var accountExists = await _db.Accounts.AnyAsync(a => a.Id == dto.AccountId);
+            var profileExists = await _db.Profiles.AnyAsync(p => p.Id == dto.ProfileId);
+
+            if (!accountExists)
+            {
+                return BadRequest($"حساب با شناسه {dto.AccountId} یافت نشد.");
+            }
+
+            if (!profileExists)
+            {
+                return BadRequest($"پروفایل با شناسه {dto.ProfileId} یافت نشد.");
+            }
+
+            var selectedProfileAccount = await _profileAccounts.FirstOrDefaultAsync(
+                pa => pa.AccountId == dto.AccountId && pa.ProfileId == dto.ProfileId
+                );
+            if (selectedProfileAccount == null) return NotFound();
+
+            var currentSumShare = await _db.ProfileAccounts
+                .Where(pa => pa.Account.Id == dto.AccountId)
+                .SumAsync(pa => pa.ShareOwned);
+            var previousShare = selectedProfileAccount.ShareOwned;
+            var otherSumShare = currentSumShare - previousShare;
+
+            try
+            {
+                Helper.ValidateShare(dto.ShareOwned, otherSumShare);
             }
             catch (ArgumentOutOfRangeException ex)
             {
@@ -62,33 +121,13 @@ namespace Accountant.Controllers
                 return BadRequest(ex.Message);
             }
 
-            var newProfileAccount = new ProfileAccount();
-            
-            newProfileAccount.ProfileId = dto.ProfileId;
-            newProfileAccount.AccountId = dto.AccountId;
-            newProfileAccount.ShareOwned = dto.ShareOwned;
-            newProfileAccount.Profile.Id = dto.ProfileId;
-            newProfileAccount.Account.Id = dto.AccountId;
-            
-            await _profileAccounts.AddAsync(newProfileAccount);
+            // TODO: check shareowned!
+            selectedProfileAccount.ShareOwned = dto.ShareOwned;
+
+            _profileAccounts.Update(selectedProfileAccount);
             await _db.SaveChangesAsync();
-            _logger.LogInformation("Profile Account Created!");
-            return Created(null as Uri, newProfileAccount);
+            return Ok();
         }
-        //
-        // [HttpPut]
-        // [Route("/ProfileAccount/Updating")]
-        // public async Task<IActionResult> UpdateAsync(ChangeProfileAccountDto dto)
-        // {
-        //     var selectedProfileAccount = await _profileAccounts.FirstOrDefaultAsync(x => x.Id == dto.Id);
-        //     if (selectedProfileAccount != null) return NotFound();
-        //     // TODO: check shareowned!
-        //     selectedProfileAccount.ShareOwned = dto.ShareOwned;
-        //
-        //     _profileAccounts.Update(selectedProfileAccount);
-        //     await _db.SaveChangesAsync();
-        //     return Ok();
-        // }
 
         [HttpGet]
         [Route("/ProfileAccount/GetAll")]
